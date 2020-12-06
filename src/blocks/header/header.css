@@ -1,0 +1,6 @@
+.header{
+    display: flex;
+    padding-top:45px;
+    flex-direction: column;
+    border-bottom: 1px solid #545454;
+}
