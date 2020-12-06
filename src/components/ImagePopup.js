@@ -1,6 +1,6 @@
 import closeBtn from "../images/CloseIcon.svg";
 import React from 'react';
-function popupImage({card, onClose}){
+function ImagePopup({card, onClose}){
   return(
             <div className={`popup popup_image ${card ? "popup_opened" : ""}`}>
             <div className="popup__overlay popup__overlay-image">
@@ -14,4 +14,4 @@ function popupImage({card, onClose}){
         )
     
 }
-export default popupImage;
+export default ImagePopup;

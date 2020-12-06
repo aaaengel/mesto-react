@@ -6,14 +6,13 @@ import plus from "../images/Vector2.svg";
 import likeIcon from "../images/Vector.svg";
 import delBtn from "../images/Group.svg";
 import React from "react";
-import Api from "../utils/Api";
+import api from "../utils/api"
 import Card from "./Card.js"
 function Main(props){
     const [userName, setUserName] = React.useState('');
   const [userDescription, setUserDescription] = React.useState('');
   const [userAvatar, setUserAvatar] = React.useState('');
   const [cards, addCards] = React.useState([]);
-  const api = new Api("https://mesto.nomoreparties.co/v1/cohort-17/")
   React.useEffect(()=>{
     Promise.all([api.getAny("users/me"), api.getAny("cards")])
     .then((res) => {
@@ -32,8 +31,8 @@ function Main(props){
             <main>
                 <section className="profile">
                     <div className="profile__content">
-                        <img className="profile__avatar" src={avatar} style={{ backgroundImage: `url(${userAvatar})` }}  alt="аватар" onClick={props.onEditAvatar} />
-                        <img className="profile__avatar__edit-icon" src = {avIcon} />
+                        <img className="profile__avatar" src={avatar} style={{ backgroundImage: `url(${userAvatar})` } }  alt="аватар" onClick={props.onEditAvatar} />
+                        <img className="profile__avatar__edit-icon" src = {avIcon} alt={'edit avatar'} />
                         <div className="profile__text">
                             <div className="profile__name-and-edit-button">
                                 <h1 className="profile__name">{userName}</h1>
@@ -49,27 +48,9 @@ function Main(props){
                     </button>
                 </section>
                 <section className="cards">
-                    <template className="card-template">
-                        <div className="card">
-                            <img className="card__image" src="#" alt="" />
-                            <div className="card__description">
-                                <h3 className="card__text"></h3>
-                                <div className="card__like-button_and_caption">
-                                    <button className="card__like-button" type="button">
-                                        <img className="card__like-image" src={likeIcon} alt="сердечко" />
-                                    </button>
-                                    <p className="card__like-caption"></p>
-                                </div>
-                                <button className="card__delete-button">
-                                    <img src={delBtn} />
-                                </button>
-                            </div>
-                        </div>
-                    </template>
-                </section>
-                <section className="cards">
-                    {cards.map(item => 
-                        <Card card={item} onCardClick={props.onCardClick} />
+                    {cards.map(item => (
+                        <Card key={item._id} card={item} onCardClick={props.onCardClick} />
+                    )
                     )}
                 </section>
             </main>

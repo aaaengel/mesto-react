@@ -1,7 +1,7 @@
 export class Api {
-constructor(url){
+constructor(url, token){
 this._url = url;
-this._token = "abc35fe1-b80b-4747-9d9f-796fef32537e";
+this._token = token;
 }
 
 
@@ -126,4 +126,5 @@ post(item, data){
   })
   }
 }
-export default Api;
+const api = new Api("https://mesto.nomoreparties.co/v1/cohort-17/", "abc35fe1-b80b-4747-9d9f-796fef32537e")
+export default api;

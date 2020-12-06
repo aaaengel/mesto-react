@@ -18,7 +18,7 @@ return (
                         <p class="card__like-caption">{card.likes.length}</p>
                     </div>
                     <button class="card__delete-button">
-                        <img src={delBtn} />
+                        <img src={delBtn} alt="delete" />
                     </button>
                 </div>
             </div>

@@ -1,12 +1,15 @@
 import '../index.css';
 import React from "react";
 import Header from "./Header";
-import Main from "./main";
+import Main from "./Main";
 import Footer from "./Footer";
-import PopupWithForm from './popupWithForm.js';
-import PopupImage from "./popupImage";
+import PopupWithForm from './PopupWithForm.js';
+import ImagePopup from "./ImagePopup";
 function App() {
-
+    const [selectedCard, setSelectedCard] = React.useState(false);
+    const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
+    const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+    const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
     function handleEditAvatarClick(){
         setIsEditAvatarPopupOpen(true)
      }
@@ -25,13 +28,13 @@ function App() {
      function handleCardClick(){
         setSelectedCard(true);
      }
-     const [selectedCard, setSelectedCard] = React.useState(false);
-    const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
-    const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-    const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
-  return (
-    <body className ="body">
-     <PopupWithForm name="edit" title="Редактировать профиль" isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}>
+    return (
+    <>
+     <div className="page">
+        <Header />
+            <Main onEditProfile={handleEditProfileClick} onEditAvatar={handleEditAvatarClick} onAddPlace={handleAddPlaceClick}  onCardClick={handleCardClick}/>
+            <Footer />
+            <PopupWithForm name="edit" title="Редактировать профиль" isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}>
                     <div className="form__container">
                         <input type='text' className='form__input form__input_name popup__form_edit' name='name' maxLength="40" minLength="2" required /> 
                         <span className='form__input-error' id='name-error'></span>
@@ -54,13 +57,9 @@ function App() {
                 </div>
     </PopupWithForm>
     <PopupWithForm name="confirm" title="Вы уверены?" />
-    <PopupImage card={selectedCard} onClose={closeAllPopups} />
-    <div className="page">
-        <Header />
-            <Main onEditProfile={handleEditProfileClick} onEditAvatar={handleEditAvatarClick} onAddPlace={handleAddPlaceClick}  onCardClick={handleCardClick}/>
-            <Footer />
+    <ImagePopup     card={selectedCard} onClose={closeAllPopups} />
         </div>
-    </body>
+   </>
   );
 }
 
