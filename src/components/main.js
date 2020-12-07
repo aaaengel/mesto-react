@@ -1,10 +1,7 @@
-import "../index.css";
 import avatar from "../images/image.jpg";
 import avIcon from "../images/avatar_icon.svg";
 import editButton from "../images/EditButton.svg";
 import plus from "../images/Vector2.svg";
-import likeIcon from "../images/Vector.svg";
-import delBtn from "../images/Group.svg";
 import React from "react";
 import api from "../utils/api"
 import Card from "./Card.js"
