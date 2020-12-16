@@ -4,11 +4,24 @@ import Main from "./Main";
 import Footer from "./Footer";
 import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from "./ImagePopup";
+import api from "../utils/api";
+import CurrentUserContext from "../contexts/CurrentUserContext";
 function App() {
+    const [currentUser, setCurrentUser] = React.useState({})  
     const [selectedCard, setSelectedCard] = React.useState(false);
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
     const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
+    React.useEffect(() => {
+        api
+          .getAny("users/me")
+          .then((res) => {
+            setCurrentUser(res);
+          })
+          .catch((err) =>
+            console.log(`Ошибка при загрузке информации о пользователе: ${err}`)
+          );
+      }, []);
     function handleEditAvatarClick(){
         setIsEditAvatarPopupOpen(true)
      }
@@ -28,7 +41,7 @@ function App() {
         setSelectedCard(true);
      }
     return (
-    <>
+    <CurrentUserContext.Provider value={currentUser}>
      <div className="page">
         <Header />
             <Main onEditProfile={handleEditProfileClick} onEditAvatar={handleEditAvatarClick} onAddPlace={handleAddPlaceClick}  onCardClick={handleCardClick}/>
@@ -58,7 +71,7 @@ function App() {
     <PopupWithForm name="confirm" title="Вы уверены?" />
     <ImagePopup     card={selectedCard} onClose={closeAllPopups} />
         </div>
-   </>
+   </CurrentUserContext.Provider>
   );
 }
 

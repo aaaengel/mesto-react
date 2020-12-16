@@ -125,6 +125,23 @@ post(item, data){
       console.log(err)
   })
   }
+  changeLikeCardStatus(id, isLiked) {
+    return fetch(`cards/likes/${id}`, {
+      method: `${isLiked ? 'PUT' : 'DELETE'}`,
+      headers: {
+        authorization: this._token,
+        'Content-Type': 'application/json'
+        }
+    }).then((res) => {
+      if(res.ok) {
+          return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`)
+  })
+  .catch((err) => {
+      console.log(err)
+  })
+  }
 }
 const api = new Api("https://mesto.nomoreparties.co/v1/cohort-17/", "abc35fe1-b80b-4747-9d9f-796fef32537e")
 export default api;
