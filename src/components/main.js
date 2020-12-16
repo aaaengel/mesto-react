@@ -9,9 +9,9 @@ function Main(props){
 const [cards, addCards] = React.useState([]);
   const currentUser = React.useContext(CurrentUserContext);
   React.useEffect(()=>{
-    Promise.all([api.getAny("cards")])
+    Promise.all(api.getAny("cards"))
     .then((res) => { 
-        addCards(res[1].map(item => ({
+        addCards(res.map(item => ({
           id: item._id,
           likes: item.likes,
           name: item.name,
@@ -26,6 +26,7 @@ const [cards, addCards] = React.useState([]);
         addCards(newCards);
     });
 } 
+console.log(cards)
     return(
             <main>
                 <section className="profile">
