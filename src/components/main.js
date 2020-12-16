@@ -24,7 +24,8 @@ const [cards, addCards] = React.useState([]);
 function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
     api.changeLikeCardStatus(card.id, !isLiked).then((newCard) => {
-        const newCards = cards.map((c) => c._id === card._id ? newCard : c);
+        console.log(newCard)
+        const newCards = cards.map((c) => c._id === card.id ? newCard : c);
         addCards(newCards);
     });
 } 
