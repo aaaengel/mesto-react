@@ -30,7 +30,7 @@ return (
                         </button>
                         <p className="card__like-caption">{card.likes.length}</p>
                     </div>
-                    <button class="card__delete-button">
+                    <button className="card__delete-button">
                         <img src={delBtn} alt="delete" className={cardDeleteButtonClassName} />
                     </button>
                 </div>

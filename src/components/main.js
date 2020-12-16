@@ -9,24 +9,26 @@ function Main(props){
 const [cards, addCards] = React.useState([]);
   const currentUser = React.useContext(CurrentUserContext);
   React.useEffect(()=>{
-    Promise.all(api.getAny("cards"))
-    .then((res) => { 
+    api.getAny("cards")
+    .then((res) => {
         addCards(res.map(item => ({
           id: item._id,
           likes: item.likes,
           name: item.name,
-          src: item.link
-        })));
+          src: item.link,
+          owner: item.owner
+        }
+        )));
       }).catch(err => console.log(err))
-  }, [])
-  function handleCardLike(card) {
+  },[])
+function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
-    api.put(card._id, !isLiked).then((newCard) => {
+    api.changeLikeCardStatus(card.id, !isLiked).then((newCard) => {
         const newCards = cards.map((c) => c._id === card._id ? newCard : c);
         addCards(newCards);
     });
 } 
-console.log(cards)
+cards.map(item => console.log(item))
     return(
             <main>
                 <section className="profile">
@@ -48,8 +50,8 @@ console.log(cards)
                     </button>
                 </section>
                 <section className="cards">
-                    {cards.map(item => (
-                        <Card key={item._id} card={item} onCardClick={props.onCardClick} onCardLike={handleCardLike} />
+                    {cards.map((item) => (
+                        <Card key={item.id} card={item} onCardClick={props.onCardClick} onCardLike={handleCardLike} />
                     )
                     )}
                 </section>
