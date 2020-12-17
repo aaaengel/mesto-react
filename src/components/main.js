@@ -12,7 +12,7 @@ const [cards, addCards] = React.useState([]);
     api.getAny("cards")
     .then((res) => {
         addCards(res.map(item => ({
-          id: item._id,
+          _id: item._id,
           likes: item.likes,
           name: item.name,
           src: item.link,
@@ -23,9 +23,9 @@ const [cards, addCards] = React.useState([]);
   },[])
 function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
-    api.changeLikeCardStatus(card.id, !isLiked).then((newCard) => {
+    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
         console.log(newCard)
-        const newCards = cards.map((c) => c._id === card.id ? newCard : c);
+        const newCards = cards.map((c) => c._id === card._id ? newCard : c);
         addCards(newCards);
     });
 } 
@@ -52,7 +52,7 @@ cards.map(item => console.log(item))
                 </section>
                 <section className="cards">
                     {cards.map((item) => (
-                        <Card key={item.id} card={item} onCardClick={props.onCardClick} onCardLike={handleCardLike} />
+                        <Card key={item._id} card={item} onCardClick={props.onCardClick} onCardLike={handleCardLike} />
                     )
                     )}
                 </section>
