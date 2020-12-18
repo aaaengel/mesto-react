@@ -6,6 +6,8 @@ import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from "./ImagePopup";
 import api from "../utils/api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
+import EditProfilePopup from "./EditProfilePopup";
+import EditAvatarPopup from "./EditAvatarPopup";
 function App() {
     const [currentUser, setCurrentUser] = React.useState({})  
     const [selectedCard, setSelectedCard] = React.useState(false);
@@ -22,6 +24,12 @@ function App() {
             console.log(`Ошибка при загрузке информации о пользователе: ${err}`)
           );
       }, []);
+      function handleUpdateUser(userData){
+        api.patch("users/me", userData)
+        .then((newUser) => setCurrentUser(newUser))
+      .catch((err) => `Ошибка при обновлении информации о пользователе: ${err}`)
+      closeAllPopups();
+      }
     function handleEditAvatarClick(){
         setIsEditAvatarPopupOpen(true)
      }
@@ -40,20 +48,21 @@ function App() {
      function handleCardClick(){
         setSelectedCard(true);
      }
+     function handleUpdateAvatar(userData){
+      api.patchAvatar("users/me/avatar", userData).then((res) => {
+        setCurrentUser(res);
+        closeAllPopups();
+      })
+      .catch((err) => `Ошибка при обновлении Аватара: ${err}`)
+      closeAllPopups();
+     }
     return (
     <CurrentUserContext.Provider value={currentUser}>
      <div className="page">
         <Header />
             <Main onEditProfile={handleEditProfileClick} onEditAvatar={handleEditAvatarClick} onAddPlace={handleAddPlaceClick}  onCardClick={handleCardClick}/>
             <Footer />
-            <PopupWithForm name="edit" title="Редактировать профиль" isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}>
-                    <div className="form__container">
-                        <input type='text' className='form__input form__input_name popup__form_edit' name='name' maxLength="40" minLength="2" required /> 
-                        <span className='form__input-error' id='name-error'></span>
-                        <input className="form__input form__input_hobby popup__form_edit" type="text" id = "hobby" name="hobby" maxLength="200" minLength="2" required />
-                        <span className='form__input-error' id='hobby-error'></span>
-                    </div>
-     </PopupWithForm>
+            <EditProfilePopup onClose={closeAllPopups} isOpen={isEditProfilePopupOpen} onUpdateUser={handleUpdateUser} />
     <PopupWithForm name="mesto" title="Новое место" isOpen={isAddPlacePopupOpen} onClose={closeAllPopups}>
                 <div className="form-container">
                     <input type='text' className='form__input form__input_mesto popup__form_mesto' name='title' placeholder="Название" required />
@@ -62,12 +71,7 @@ function App() {
                     <span className='form__input-error' id='link-avatar-error'></span>
                 </div>
     </PopupWithForm>
-    <PopupWithForm name="avatar" title="Новый аватар" isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups}>
-                <div className="form-container">
-                    <input className="form__input form__input_link popup__form_avatar"  id="link" name="link_avatar" placeholder="ссылка" type="url" required />
-                    <span className='form__input-error' id='link-error'></span>
-                </div>
-    </PopupWithForm>
+      <EditAvatarPopup onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
     <PopupWithForm name="confirm" title="Вы уверены?" />
     <ImagePopup     card={selectedCard} onClose={closeAllPopups} />
         </div>

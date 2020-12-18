@@ -9,8 +9,8 @@ export function Card({card, onCardClick, onCardLike}) {
         `card__delete-button ${isOwn ? 'card__delete-button' : 'card__delete-button_type_isHidden'}`
       ); 
     const isLiked = card.likes.some(i => i._id = currentUser._id);
-    const cardLikeButtonClassName = `card__like-image ${
-        isLiked ? "card__like-image" : "card__like-icon_active"
+    const cardLikeButtonClassName = `card__like-icon ${
+        isLiked ? "card__like-icon_active" : "card__like-icon"
       }`;
     function handleClick() {
         onCardClick(card);

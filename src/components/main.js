@@ -23,14 +23,19 @@ const [cards, addCards] = React.useState([]);
   },[])
 function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
-    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-        console.log(newCard)
+    api.changeLikeCardStatus(card._id, !isLiked).then((item) => {
+        const newCard = {
+            _id: item._id,
+            likes: item.likes,
+            name: item.name,
+            src: item.link,
+            owner: item.owner
+        }
         const newCards = cards.map((c) => c._id === card._id ? newCard : c);
         addCards(newCards);
     });
 } 
-cards.map(item => console.log(item))
-    return(
+return(
             <main>
                 <section className="profile">
                     <div className="profile__content">

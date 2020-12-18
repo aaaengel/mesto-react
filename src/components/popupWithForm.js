@@ -4,7 +4,7 @@ function PopupWithForm(props){
 return(
 <div className={`popup popup_${props.name} ${props.isOpen ? "popup_opened" : ""}`}>
             <div className={`popup__overlay popup__overlay-${props.name}`}>
-            <form className={`popup__window popup__window-${props.name}`}>
+            <form className={`popup__window popup__window-${props.name}`} onSubmit={props.onSubmit}>
                 <fieldset className="form__set">
                     <h2 className="popup__text">{props.title}</h2>
                     {props.children}
