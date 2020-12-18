@@ -127,7 +127,7 @@ post(item, data){
   }
   changeLikeCardStatus(id, isLiked) {
     return fetch(this._url + `cards/likes/${id}`, {
-      method: `${isLiked ? 'PUT' : 'DELETE'}`,
+      method: `${isLiked ? 'DELETE' : 'PUT'}`,
       headers: {
         authorization: this._token,
         'Content-Type': 'application/json'
