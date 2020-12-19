@@ -2,39 +2,10 @@ import avIcon from "../images/avatar_icon.svg";
 import editButton from "../images/EditButton.svg";
 import plus from "../images/Vector2.svg";
 import React from "react";
-import api from "../utils/api";
 import Card from "./Card.js";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 function Main(props){
-const [cards, addCards] = React.useState([]);
-  const currentUser = React.useContext(CurrentUserContext);
-  React.useEffect(()=>{
-    api.getAny("cards")
-    .then((res) => {
-        addCards(res.map(item => ({
-          _id: item._id,
-          likes: item.likes,
-          name: item.name,
-          src: item.link,
-          owner: item.owner
-        }
-        )));
-      }).catch(err => console.log(err))
-  },[])
-function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
-    api.changeLikeCardStatus(card._id, !isLiked).then((item) => {
-        const newCard = {
-            _id: item._id,
-            likes: item.likes,
-            name: item.name,
-            src: item.link,
-            owner: item.owner
-        }
-        const newCards = cards.map((c) => c._id === card._id ? newCard : c);
-        addCards(newCards);
-    });
-} 
+const currentUser = React.useContext(CurrentUserContext);
 return(
             <main>
                 <section className="profile">
@@ -56,8 +27,8 @@ return(
                     </button>
                 </section>
                 <section className="cards">
-                    {cards.map((item) => (
-                        <Card key={item._id} card={item} onCardClick={props.onCardClick} onCardLike={handleCardLike} />
+                    {props.cards.map((item) => (
+                        <Card key={item._id} card={item} onCardClick={props.onCardClick} onCardDelete={props.handleCardDelete} onCardLike={props.handleCardLike} />
                     )
                     )}
                 </section>
