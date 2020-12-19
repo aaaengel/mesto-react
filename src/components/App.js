@@ -46,8 +46,8 @@ function App() {
         setIsAddPlacePopupOpen(false);
         setSelectedCard(false);
      }
-     function handleCardClick(){
-        setSelectedCard(true);
+     function handleCardClick(card){
+        setSelectedCard(card);
      }
      function handleUpdateAvatar(userData){
       api.patchAvatar("users/me/avatar", userData).then((res) => {
@@ -66,7 +66,7 @@ function App() {
           _id: item._id,
           likes: item.likes,
           name: item.name,
-          src: item.link,
+          link: item.link,
           owner: item.owner
         }
         )));
@@ -79,12 +79,13 @@ function handleCardLike(card) {
             _id: item._id,
             likes: item.likes,
             name: item.name,
-            src: item.link,
+            link: item.link,
             owner: item.owner
         }
         const newCards = cards.map((c) => c._id === card._id ? newCard : c);
         addCards(newCards);
-    });
+    })
+    .catch(err => console.log(err))
 } 
 function handleCardDelete(card){
     api.delete(`cards/${card._id}`)

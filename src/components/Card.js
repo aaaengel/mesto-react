@@ -8,7 +8,7 @@ export function Card({card, onCardClick, onCardLike, onCardDelete}) {
     const cardDeleteButtonClassName = (
         `card__delete-button ${isOwn ? 'card__delete-button' : 'card__delete-button_type_isHidden'}`
       ); 
-    const isLiked = card.likes.some(i => i._id = currentUser._id);
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
     const cardLikeButtonClassName = `card__like-icon ${
         isLiked ? "card__like-icon_active" : "card__like-icon"
       }`;
@@ -24,7 +24,7 @@ export function Card({card, onCardClick, onCardLike, onCardDelete}) {
     return (
 		
 	        <div className="card">
-                <img className="card__image" src={card.src} alt={card.name} onClick={handleClick} />
+                <img className="card__image" src={card.link} alt={card.name} onClick={handleClick} />
                 <div className="card__description">
                     <h3 className="card__text">{card.name}</h3>
                     <div className="card__like-button_and_caption">
