@@ -1,6 +1,9 @@
+@import url("./__button/header__button.css");
+@import url("./__no-disp/header__no-disp.css");
 .header{
     display: flex;
     padding-top:45px;
-    flex-direction: column;
+    flex-direction: row;
     border-bottom: 1px solid #545454;
+    justify-content: space-between;
 }

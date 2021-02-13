@@ -1,4 +1,5 @@
 import React from "react";
+import { BrowserRouter, Route, Switch, Redirect, withRouter, useHistory} from 'react-router-dom';
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -9,12 +10,20 @@ import CurrentUserContext from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
+import Register from './Register';
+import Login from "./Login";
+import ProtectedRouter from "./ProtectedRouter";
+import InfoToolTip from "./InfoTooltip"
+import * as auth from './auth.js';
 function App() {
     const [currentUser, setCurrentUser] = React.useState({})  
     const [selectedCard, setSelectedCard] = React.useState(false);
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
     const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
+    const [loggedIn, setState] = React.useState(false)  
+    const [isRegistred, setIsRegistred] = React.useState(false)
+    const history = useHistory();
     React.useEffect(() => {
         api
           .getAny("users/me")
@@ -25,6 +34,7 @@ function App() {
             console.log(`Ошибка при загрузке информации о пользователе: ${err}`)
           );
       }, []);
+      
       function handleUpdateUser(userData){
         api.patch("users/me", userData)
         .then((newUser) => setCurrentUser(newUser))
@@ -57,7 +67,21 @@ function App() {
       .catch((err) => `Ошибка при обновлении Аватара: ${err}`)
       closeAllPopups();
      }
-
+     function handleTokenCheck(){
+      if (localStorage.getItem('jwt')){
+      const jwt = localStorage.getItem('jwt');
+      auth.checkToken(jwt).then((res) => {
+      if (res){
+          setState({
+            loggedIn: true,
+            }) 
+            history.push("/");
+          }}); 
+        }
+    }
+    React.useEffect(() =>{
+      handleTokenCheck();
+    }, [])
      const [cards, addCards] = React.useState([]);
   React.useEffect(()=>{
     api.getAny("cards")
@@ -101,20 +125,38 @@ function handleAddPlaceSubmit(userData){
         .catch(err => console.log(err))
         closeAllPopups();
 }
+function handleLogin (){
+  setState({
+    loggedIn: true
+  })
+}
     return (
-    <CurrentUserContext.Provider value={currentUser}>
-     <div className="page">
+      <BrowserRouter>
+      <Switch>
+      <CurrentUserContext.Provider value={currentUser}>
+      <div className="page">
         <Header />
-            <Main cards={cards} handleCardLike={handleCardLike} handleCardDelete={handleCardDelete} onEditProfile={handleEditProfileClick} onEditAvatar={handleEditAvatarClick} onAddPlace={handleAddPlaceClick}  onCardClick={handleCardClick}/>
-            <Footer />
-            <EditProfilePopup onClose={closeAllPopups} isOpen={isEditProfilePopupOpen} onUpdateUser={handleUpdateUser} />
-            <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit}/>
-      <EditAvatarPopup onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
-    <PopupWithForm name="confirm" title="Вы уверены?" />
-    <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        <InfoToolTip isRegistred={isRegistred} onClose={closeAllPopups} />
+        <Route path="/sign-up">
+              <Register setIsRegistred={setIsRegistred} />
+            </Route>
+            <Route path="/sign-in">
+              <Login handleLogin={handleLogin} history={history} />
+            </Route>
+            <Route exact path="/">
+              <ProtectedRouter loggedIn={loggedIn} component = {Main} cards={cards} handleCardLike={handleCardLike} handleCardDelete={handleCardDelete} onEditProfile={handleEditProfileClick} onEditAvatar={handleEditAvatarClick} onAddPlace={handleAddPlaceClick}  onCardClick={handleCardClick}/>
+              <Footer />
+              <EditProfilePopup onClose={closeAllPopups} isOpen={isEditProfilePopupOpen} onUpdateUser={handleUpdateUser} />
+              <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit}/>
+              <EditAvatarPopup onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
+              <PopupWithForm name="confirm" title="Вы уверены?" />
+              <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+            </Route>
         </div>
    </CurrentUserContext.Provider>
-  );
+   </Switch>
+   </BrowserRouter>
+   );
 }
 
-export default App;
+export default withRouter(App);
