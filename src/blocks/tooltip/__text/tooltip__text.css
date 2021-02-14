@@ -1,4 +1,4 @@
-.tooltip__logo{
+.tooltip__text{
     font-family: Inter;
     font-style: normal;
     font-weight: 900;
@@ -6,7 +6,8 @@
     line-height: 29px;
     text-align: center;
     color: #000000;
-    margin:auto;
     margin-bottom:60px;
     margin-top: 32px;
+    margin-right: 32px;
+    margin-left: 32px;
 }

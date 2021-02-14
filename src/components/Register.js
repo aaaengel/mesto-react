@@ -28,15 +28,17 @@ class Register extends React.Component {
                 message: ''
               }, () => {
                 this.props.history.push('/sign-in');
-                this.props.setIsRegistred()
-              })
-            } else {
-              this.setState({
+               })
+               this.props.notify()
+              }
+            }).catch((err) =>{
+               this.setState({
                 message: 'Что-то пошло не так!'
               })
-            }
-          })
-        }
+              this.props.error()
+            }).finally(() => this.props.isOpen(true))
+          }
+        
       
       render(){
         return (

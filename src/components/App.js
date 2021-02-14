@@ -15,6 +15,9 @@ import Login from "./Login";
 import ProtectedRouter from "./ProtectedRouter";
 import InfoToolTip from "./InfoTooltip"
 import * as auth from './auth.js';
+import success from "../images/Union.svg"
+import error from "../images/UnionError.svg"
+import loading from "../images/loading.png"
 function App() {
     const [currentUser, setCurrentUser] = React.useState({})  
     const [selectedCard, setSelectedCard] = React.useState(false);
@@ -22,7 +25,11 @@ function App() {
     const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
     const [loggedIn, setState] = React.useState(false)  
-    const [isRegistred, setIsRegistred] = React.useState(false)
+    const [toolTipStat, setToolTipStat] = React.useState({
+      iconStatus: loading,
+      text: 'Загрузка...',
+    });
+    const [isInfoToolTipPopupOpen, setIsInfoToolTipPopupOpen] = React.useState(false);
     const history = useHistory();
     React.useEffect(() => {
         api
@@ -55,6 +62,7 @@ function App() {
         setIsEditProfilePopupOpen(false);
         setIsAddPlacePopupOpen(false);
         setSelectedCard(false);
+        setIsInfoToolTipPopupOpen(false);
      }
      function handleCardClick(card){
         setSelectedCard(card);
@@ -125,6 +133,12 @@ function handleAddPlaceSubmit(userData){
         .catch(err => console.log(err))
         closeAllPopups();
 }
+function notify(){
+  setToolTipStat({ iconStatus: success, text: 'Регистрация прошла успешно!' });
+}
+function registerError(){
+  setToolTipStat({ iconStatus: error, text: "Что-то пошло не так! Попробуйте ещё раз"});
+}
 function handleLogin (){
   setState({
     loggedIn: true
@@ -136,15 +150,15 @@ function handleLogin (){
       <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Header />
-        <InfoToolTip isRegistred={isRegistred} onClose={closeAllPopups} />
+        <InfoToolTip onClose={closeAllPopups} status={toolTipStat} isOpen={isInfoToolTipPopupOpen} />
         <Route path="/sign-up">
-              <Register setIsRegistred={setIsRegistred} />
+              <Register notify={notify} error={registerError} isOpen={setIsInfoToolTipPopupOpen} />
             </Route>
             <Route path="/sign-in">
               <Login handleLogin={handleLogin} history={history} />
             </Route>
             <Route exact path="/">
-              <ProtectedRouter loggedIn={loggedIn} component = {Main} cards={cards} handleCardLike={handleCardLike} handleCardDelete={handleCardDelete} onEditProfile={handleEditProfileClick} onEditAvatar={handleEditAvatarClick} onAddPlace={handleAddPlaceClick}  onCardClick={handleCardClick}/>
+              <ProtectedRouter loggedIn={loggedIn} component={Main} cards={cards} handleCardLike={handleCardLike} handleCardDelete={handleCardDelete} onEditProfile={handleEditProfileClick} onEditAvatar={handleEditAvatarClick} onAddPlace={handleAddPlaceClick}  onCardClick={handleCardClick}/>
               <Footer />
               <EditProfilePopup onClose={closeAllPopups} isOpen={isEditProfilePopupOpen} onUpdateUser={handleUpdateUser} />
               <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit}/>
